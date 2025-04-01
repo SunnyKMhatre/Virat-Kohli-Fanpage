@@ -114,7 +114,6 @@ class CommonContainer extends StatelessWidget {
                     child: Row(
                       children: bottomImages.map<Widget>((e) {
                         if (e is String) {
-                          // If it's a String, treat it as an image path
                           return Padding(
                             padding: const EdgeInsets.only(
                                 top: 8, left: 8, right: 8, bottom: 24),
@@ -123,14 +122,13 @@ class CommonContainer extends StatelessWidget {
 
                           // width: 10, height: 10, fit: BoxFit.cover);
                         } else if (e is Widget) {
-                          // If it's already a Widget (e.g., GestureDetector), return as-is
                           return Padding(
                             padding: const EdgeInsets.only(
                                 top: 8, left: 8, right: 8, bottom: 24),
                             child: e,
                           );
                         } else {
-                          return SizedBox(); // Fallback in case of unknown type
+                          return SizedBox();
                         }
                       }).toList(),
                     ),

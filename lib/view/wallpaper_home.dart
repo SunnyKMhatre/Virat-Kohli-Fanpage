@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:image_downloader/image_downloader.dart';
 import 'package:provider/provider.dart';
 import 'package:vk_fanpage/controller/wallpaper_controller.dart';
 
@@ -64,25 +63,30 @@ class WallpaperHome extends StatelessWidget {
                       itemCount: controller.response!.length,
                       itemBuilder: (context, i) {
                         return GestureDetector(
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FullScreenImage(
-                                  imageUrl: controller.response![i].image ?? ""),
-                            ),
-                          ),
-                          child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Colors.white, width: 4), // White border
-                            borderRadius:
-                                BorderRadius.circular(10), // Rounded corners
-                          ),
-                          child: Image.network(
-                            controller.response![i].image ?? "",
-                            fit: BoxFit.cover,
-                          ),
-                        ));
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => FullScreenImageView(
+                                    imageUrl:
+                                        controller.response![i].image ?? "",
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Colors.white,
+                                    width: 4), // White border
+                                borderRadius: BorderRadius.circular(
+                                    10), // Rounded corners
+                              ),
+                              child: Image.network(
+                                controller.response![i].image ?? "",
+                                fit: BoxFit.cover,
+                              ),
+                            ));
                       },
                     ),
             ),
@@ -93,21 +97,10 @@ class WallpaperHome extends StatelessWidget {
   }
 }
 
-class FullScreenImage extends StatelessWidget {
+class FullScreenImageView extends StatelessWidget {
   final String imageUrl;
-  const FullScreenImage({super.key, required this.imageUrl});
 
-  void _downloadImage(BuildContext context) async {
-    try {
-      var imageId = await ImageDownloader.downloadImage(imageUrl);
-      if (imageId == null) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Image saved to gallery")),
-      );
-    } catch (error) {
-      print("Error downloading image: $error");
-    }
-  }
+  const FullScreenImageView({super.key, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -117,32 +110,20 @@ class FullScreenImage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+          icon: Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: InteractiveViewer(
-                child: Image.network(imageUrl, fit: BoxFit.contain),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton.icon(
-                onPressed: () => _downloadImage(context),
-                icon: const Icon(Icons.download, color: Colors.white),
-                label: const Text("Download", style: TextStyle(color: Colors.white)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                ),
-              ),
-            ),
-          ],
+        child: InteractiveViewer(
+          child: Image.network(
+            imageUrl,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
         ),
       ),
     );
